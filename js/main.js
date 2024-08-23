@@ -6,16 +6,34 @@ const messageDisplay = document.querySelector("#message");
 
 const GAME_TIME = 5;
 
+const API_URL = "https://random-word-api.herokuapp.com/word?number=100";
+
 let score = 0;
 let words = ["banana", "key", "car", "javascript", "junghee"];
 let time = 0;
 let timeInterval;
 let isPlaying = false;
+let isReady = false;
+
+init();
+
+// function init() {
+//   const res = fetch(API_URL)
+//     .then((res) => res.json())
+//     .then((data) => (words = data));
+// }
+
+async function init() {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  words = data.filter((item) => item.length < 7);
+  isReady = true;
+}
 
 wordInput.addEventListener("input", (e) => {
   const typedText = e.target.value;
   const currentText = currentWord.innerHTML;
-  if (typedText.toUpperCase() === currentText.toUpperCase()) {
+  if (typedText.toUpperCase() === currentText.toUpperCase() && isReady) {
     addScore();
     setNewWord();
   }
